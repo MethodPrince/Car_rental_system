@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<h1>Admin Dashboard</h1>
+<a href="/logout">Logout</a>
+
+<h2>Add Car</h2>
+<form method="POST" action="/add_car">
+    <input name="car_id" placeholder="Car ID" required>
+    <input name="make" placeholder="Make" required>
+    <input name="model" placeholder="Model" required>
+    <input name="year" placeholder="Year" required>
+    <input name="features" placeholder="Features (comma separated)">
+    <button type="submit">Add Car</button>
+</form>
+
+<h2>Add Customer</h2>
+<form method="POST" action="/add_customer">
+    <input name="customer_id" placeholder="Customer ID" required>
+    <input name="name" placeholder="Customer Name" required>
+    <button type="submit">Add Customer</button>
+</form>
+
+<h2>Rental Report</h2>
+<table border="1">
+    <tr>
+        <th>Car ID</th><th>Make</th><th>Model</th><th>Customer ID</th><th>Customer Name</th><th>Rented On</th><th>Returned On</th><th>Return</th>
+    </tr>
+    {% for r in report %}
+    <tr>
+        <td>{{ r.car_id }}</td>
+        <td>{{ r.make }}</td>
+        <td>{{ r.model }}</td>
+        <td>{{ r.customer_id }}</td>
+        <td>{{ r.customer_name }}</td>
+        <td>{{ r.rented_on }}</td>
+        <td>{{ r.returned_on or "Not returned" }}</td>
+        <td>
+            {% if not r.returned_on %}
+            <form method="POST" action="/return_car/{{ r.car_id }}/{{ r.customer_id }}">
+                <input type="date" name="returned_on" required>
+                <button type="submit">Return</button>
+            </form>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

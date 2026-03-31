@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Available Cars</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<h1>Available Cars</h1>
+<table border="1">
+<tr>
+    <th>ID</th><th>Make</th><th>Model</th><th>Year</th><th>Features</th><th>Rent</th>
+</tr>
+{% for car in cars %}
+<tr>
+    <td>{{ car.car_id }}</td>
+    <td>{{ car.make }}</td>
+    <td>{{ car.model }}</td>
+    <td>{{ car.year }}</td>
+    <td>{{ car.features | join(', ') }}</td>
+    <td>
+        <form method="POST" action="/rent_car/{{ car.car_id }}">
+            <input name="name" placeholder="Your Name" required>
+            <input name="phone" placeholder="Phone Number" required>
+            <input name="id_number" placeholder="ID Number" required>
+            <input type="date" name="rented_on" required>
+            <button type="submit">Rent</button>
+        </form>
+    </td>
+</tr>
+{% endfor %}
+</table>
+</body>
+</html>
