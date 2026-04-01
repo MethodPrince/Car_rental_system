@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Car Rental System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="navbar">
+    <a class="logo" href="/">CarRentPro</a>
+    <nav>
+        <a class="btn btn-secondary" href="/cars">User</a>
+        <a class="btn btn-secondary" href="/admin_login">Admin</a>
+    </nav>
+</header>
+<div class="page-wrap">
+    <div class="card">
+        <h1 class="section-title">Welcome to CarRentPro</h1>
+        <p>Choose your pathway for booking or management. Browse cars, filter by make and rent instantly. Admins can add/delete cars and manage rentals.</p>
+        <div style="padding-top:10px;">
+            <a class="btn btn-primary" href="/cars">Browse Cars</a>
+            <a class="btn btn-secondary" href="/admin_login">Admin Console</a>
+        </div>
+    </div>
+</div>
+<footer class="footer">Car rental system demo | Place images in static/images/ and set name in car record</footer>
+</body>
+</html>

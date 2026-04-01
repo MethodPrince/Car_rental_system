@@ -5,17 +5,27 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<h1>Admin Dashboard</h1>
-<a href="/logout">Logout</a>
+<header class="navbar">
+    <a class="logo" href="/">CarRentPro Admin</a>
+    <nav>
+        <a class="btn btn-secondary" href="/cars">User View</a>
+        <a class="btn btn-danger" href="/logout">Logout</a>
+    </nav>
+</header>
+<div class="page-wrap">
+    <h1 class="section-title">Admin Dashboard</h1>
 
-<h2>Add Car</h2>
-<form method="POST" action="/add_car">
+    <div class="card">
+        <h2 style="margin-top:0;">Add Car</h2>
+<form method="POST" action="/add_car" enctype="multipart/form-data">
     <input name="car_id" placeholder="Car ID" required>
-    <input name="make" placeholder="Make" required>
+    <input name="make" placeholder="Make (VW, AUDI, BMW, TOYOTA, VAN, etc)" required>
     <input name="model" placeholder="Model" required>
     <input name="year" placeholder="Year" required>
     <input name="features" placeholder="Features (comma separated)">
-    <button type="submit">Add Car</button>
+    <label for="image">Car Image (upload JPG/PNG)</label>
+    <input type="file" id="image" name="image" accept="image/png, image/jpeg">
+    <button type="submit" class="btn btn-primary">Add Car</button>
 </form>
 
 <h2>Add Customer</h2>
@@ -24,6 +34,36 @@
     <input name="name" placeholder="Customer Name" required>
     <button type="submit">Add Customer</button>
 </form>
+
+<h2>Fleet Inventory</h2>
+<table>
+    <tr>
+        <th>Image</th><th>Car ID</th><th>Make</th><th>Model</th><th>Year</th><th>Features</th><th>Status</th><th>Action</th>
+    </tr>
+    {% for car in cars %}
+    {% set active_rental = car.rentals | selectattr('returned_on', 'equalto', None) | list %}
+    <tr>
+        <td>
+            {% if car.image %}
+                <img class="car-image" src="{{ url_for('static', filename='images/' ~ car.image) }}" alt="{{ car.make }} {{ car.model }}" style="max-width:80px;" />
+            {% else %}
+                <span class="status">No image</span>
+            {% endif %}
+        </td>
+        <td>{{ car.car_id }}</td>
+        <td>{{ car.make }}</td>
+        <td>{{ car.model }}</td>
+        <td>{{ car.year }}</td>
+        <td>{{ car.features | join(', ') }}</td>
+        <td>{{ 'Rented' if active_rental else 'Available' }}</td>
+        <td>
+            <form method="POST" action="/delete_car/{{ car.car_id }}" onsubmit="return confirm('Delete car {{ car.car_id }}?');">
+                <button type="submit" class="btn cancel">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 
 <h2>Rental Report</h2>
 <table border="1">
@@ -50,5 +90,7 @@
     </tr>
     {% endfor %}
 </table>
+    </div>
+</div>
 </body>
 </html>

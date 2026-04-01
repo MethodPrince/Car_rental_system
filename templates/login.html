@@ -2,13 +2,28 @@
 <html>
 <head>
     <title>Admin Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<h1>Admin Login</h1>
-<form method="POST">
-    <input name="username" placeholder="Admin Username" required>
-    <input name="password" type="password" placeholder="Password" required>
-    <button type="submit">Login</button>
-</form>
+<header class="navbar">
+    <a class="logo" href="/">CarRentPro</a>
+    <nav>
+        <a class="btn btn-secondary" href="/cars">User Cars</a>
+        <a class="btn btn-secondary" href="/">Home</a>
+    </nav>
+</header>
+<div class="page-wrap">
+    <div class="card">
+        <h1 class="section-title">Admin Login</h1>
+        <form method="POST" class="form-group">
+            <label for="username">Username</label>
+            <input id="username" name="username" placeholder="Admin Username" required>
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" placeholder="Password" required>
+            <button class="btn btn-primary" type="submit">Sign In</button>
+        </form>
+    </div>
+    <div class="footer">Admin user must exist in DB with role=admin and hashed password stored</div>
+</div>
 </body>
 </html>

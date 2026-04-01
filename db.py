@@ -19,8 +19,11 @@ def add_car(car):
 def get_all_cars():
     return list(cars_collection.find())
 
-def get_available_cars():
-    cars = list(cars_collection.find())
+def get_available_cars(make=None):
+    query = {}
+    if make:
+        query["make"] = make
+    cars = list(cars_collection.find(query))
     available = []
     for car in cars:
         rented = False
@@ -32,7 +35,20 @@ def get_available_cars():
             available.append(car)
     return available
 
-# Rent a car (with customer info)
+# Get distinct makes for dropdown
+def get_car_makes():
+    makes = cars_collection.distinct("make")
+    return sorted([m for m in makes if m])
+
+# Get specific car by ID
+def get_car(car_id):
+    return cars_collection.find_one({"car_id": car_id})
+
+# Delete car by ID
+def delete_car(car_id):
+    return cars_collection.delete_one({"car_id": car_id})
+
+# Rent a car (with customer info) only if not currently rented
 def rent_car(car_id, customer_info, rented_on):
     rental = {
         "customer_info": customer_info,
@@ -40,7 +56,10 @@ def rent_car(car_id, customer_info, rented_on):
         "returned_on": None
     }
     return cars_collection.update_one(
-        {"car_id": car_id},
+        {
+            "car_id": car_id,
+            "$nor": [{"rentals": {"$elemMatch": {"returned_on": None}}}]
+        },
         {"$push": {"rentals": rental}}
     )
 

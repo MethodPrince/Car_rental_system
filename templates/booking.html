@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book {{ car.make }} {{ car.model }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="navbar">
+    <a class="logo" href="/">CarRentPro</a>
+    <nav>
+        <a class="btn btn-secondary" href="/cars">Back to List</a>
+        <a class="btn btn-secondary" href="/">Home</a>
+    </nav>
+</header>
+<div class="page-wrap">
+    <div class="card">
+        <h1 class="section-title">Book Car</h1>
+        <div class="form-group">
+            <img class="car-image" src="{{ url_for('static', filename='images/' ~ car.image) }}" alt="{{ car.make }} {{ car.model }}">
+            <div>
+                <h2>{{ car.make }} {{ car.model }} ({{ car.year }})</h2>
+                <p><strong>Features:</strong> {{ car.features | join(', ') }}</p>
+            </div>
+        </div>
+        <form method="POST" action="/confirm_booking/{{ car.car_id }}" class="form-group">
+            <label for="name">Your Name</label>
+            <input name="name" id="name" required>
+            <label for="phone">Phone Number</label>
+            <input name="phone" id="phone" required>
+            <label for="id_number">ID Number</label>
+            <input name="id_number" id="id_number" required>
+            <label for="rented_on">Start Date</label>
+            <input type="date" name="rented_on" id="rented_on" required>
+            <button type="submit" class="btn btn-primary">Confirm Booking</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

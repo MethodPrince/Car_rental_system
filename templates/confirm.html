@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Booking Confirmation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="navbar">
+    <a class="logo" href="/">CarRentPro</a>
+    <nav>
+        <a class="btn btn-secondary" href="/cars">Back to Cars</a>
+        <a class="btn btn-secondary" href="/">Home</a>
+    </nav>
+</header>
+<div class="page-wrap">
+    <div class="card">
+        <h1 class="section-title">Booking Confirmed</h1>
+        <p>Thank you <strong>{{ customer.name }}</strong>, your booking is complete.</p>
+        <ul>
+            <li><strong>Car:</strong> {{ car.make }} {{ car.model }} ({{ car.year }})</li>
+            <li><strong>Car ID:</strong> {{ car.car_id }}</li>
+            <li><strong>Phone:</strong> {{ customer.phone }}</li>
+            <li><strong>ID Number:</strong> {{ customer.id_number }}</li>
+            <li><strong>Rented On:</strong> {{ rented_on }}</li>
+        </ul>
+        <p class="status">Go to admin dashboard to manage returns and report.</p>
+        <a class="btn btn-primary" href="/cars">Back to available cars</a>
+    </div>
+</div>
+</body>
+</html>

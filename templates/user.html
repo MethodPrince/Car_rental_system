@@ -5,29 +5,60 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<h1>Available Cars</h1>
-<table border="1">
-<tr>
-    <th>ID</th><th>Make</th><th>Model</th><th>Year</th><th>Features</th><th>Rent</th>
-</tr>
-{% for car in cars %}
-<tr>
-    <td>{{ car.car_id }}</td>
-    <td>{{ car.make }}</td>
-    <td>{{ car.model }}</td>
-    <td>{{ car.year }}</td>
-    <td>{{ car.features | join(', ') }}</td>
-    <td>
-        <form method="POST" action="/rent_car/{{ car.car_id }}">
-            <input name="name" placeholder="Your Name" required>
-            <input name="phone" placeholder="Phone Number" required>
-            <input name="id_number" placeholder="ID Number" required>
-            <input type="date" name="rented_on" required>
-            <button type="submit">Rent</button>
+<header class="navbar">
+    <a class="logo" href="/">CarRentPro</a>
+    <nav>
+        <a class="btn btn-secondary" href="/">Home</a>
+        <a class="btn btn-secondary" href="/admin_login">Admin</a>
+    </nav>
+</header>
+<div class="page-wrap">
+    <h1 class="section-title">Available Cars</h1>
+    <div class="card">
+        <form method="GET" action="/cars" class="form-group">
+            <label for="make">Filter by make:</label>
+            <select name="make" id="make" onchange="this.form.submit()">
+                <option value="">All</option>
+                {% for make in makes %}
+                    <option value="{{ make }}" {% if make == selected_make %}selected{% endif %}>{{ make }}</option>
+                {% endfor %}
+            </select>
+            <noscript><button class="btn btn-primary" type="submit">Filter</button></noscript>
         </form>
-    </td>
-</tr>
-{% endfor %}
-</table>
+    </div>
+
+    <div class="car-grid">
+        {% for car in cars %}
+            {% set is_rented = car.rentals | selectattr('returned_on', 'equalto', None) | list | length > 0 %}
+            <div class="car-card">
+                {% if car.image %}
+                    <img src="{{ url_for('static', filename='images/' ~ car.image) }}" alt="{{ car.make }} {{ car.model }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/450x260?text=No+Image" alt="No image">
+                {% endif %}
+                <div class="car-card-body">
+                    <h3 class="car-card-title">{{ car.make }} {{ car.model }}</h3>
+                    <p class="car-card-subtitle">ID: {{ car.car_id }} • {{ car.year }}</p>
+                    <p class="car-card-features" id="features-{{ car.car_id }}">{{ car.features | join(', ') }}</p>
+                    <div class="car-card-actions">
+                        <a class="btn btn-primary" href="/book_car/{{ car.car_id }}">Book</a>
+                        <button type="button" class="view-more" onclick="toggleFeatures('{{ car.car_id }}')">View More</button>
+                    </div>
+                    <div style="margin-top:10px;">
+                        <span class="status-chip {% if is_rented %}rented{% endif %}">{{ 'Rented' if is_rented else 'Available' }}</span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+function toggleFeatures(carId) {
+    var el = document.getElementById('features-' + carId);
+    if (!el) return;
+    el.classList.toggle('expanded');
+}
+</script>
 </body>
 </html>
